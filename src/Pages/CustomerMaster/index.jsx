@@ -78,7 +78,7 @@ function CustomerMaster() {
   //Fetch the country list
   const { CountryListData } = useFetchCountry(
     {
-      CompanyCode: userInfo?.details?.CompanyCode,
+     
     },
     []
   );

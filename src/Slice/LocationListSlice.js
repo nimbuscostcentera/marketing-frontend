@@ -1,17 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import AxiosInstance from "../store/AxiosInstance";
 const URL = `${process.env.REACT_APP_BASEURL}/auth-routes/`;
 
 export const getAllLocation = createAsyncThunk(
   "LocationList",
   async (UserData, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post(URL, UserData, config);
+      const { data } = await AxiosInstance.post(URL, UserData);
       return data?.response || [];
     } catch (error) {
       return rejectWithValue(error.response.data.response);

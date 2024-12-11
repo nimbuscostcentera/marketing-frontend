@@ -24,6 +24,7 @@ import StateAdd from "./Pages/AreaMaster/StateAdd";
 import CityAdd from "./Pages/AreaMaster/CityAdd";
 import ZoneAdd from "./Pages/AreaMaster/ZoneAdd";
 import SalesManMaster from "./Pages/SalesManMaster";
+import CompanyRegisterMaster from "./Pages/RegisterPage";
 import SalesManList from "./Pages/SalesManMaster/SalesManList";
 import Industry from "./Pages/Industry";
 function App() {
@@ -139,6 +140,14 @@ function App() {
           element={
             <PrivateLayout>
               <SalesManList />
+            </PrivateLayout>
+          }
+        />
+        <Route
+          path="company-register"
+          element={
+            <PrivateLayout>
+              <CompanyRegisterMaster />
             </PrivateLayout>
           }
         />

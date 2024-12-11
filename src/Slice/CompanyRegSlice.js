@@ -1,20 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-const URL = `${process.env.REACT_APP_BASEURL}/auth-routes/company-add`;
+import AxiosInstance from "../store/AxiosInstance";
+const URL = `${process.env.REACT_APP_BASEURL}/auth-routes/companyreg`;
 
 export const CompanyRegFunc = createAsyncThunk(
   "CompanyReg",
   async (UserData, { rejectWithValue }) => {
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
-      const { data } = await axios.post(URL, UserData, config);
-      return data?.response;
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "application/json",
+      //   },
+      // };
+      const { data } = await AxiosInstance.post(URL, UserData);
+      return data;
     } catch (error) {
-      return rejectWithValue(error.response.data.response);
+      // console.log(error.response);
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -23,7 +25,7 @@ const CompanyRegSlice = createSlice({
   name: "CompanyReg",
   initialState: {
     isComRegLoding: false,
-    CompRegSuccessMsg:"",
+    CompRegSuccessMsg: "",
     CompRegErrorMsg: "",
     isCompRegErrorMsg: false,
     isCompRegSuccess: false,

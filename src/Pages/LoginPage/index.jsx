@@ -38,10 +38,11 @@ function Login() {
   useEffect(() => {
     if (isSuccess && !isloading && !isError) {
       // toast.success(userInfo?.msg, { autoClose: 6000, position: "top-right" });
-      if (userInfo?.details?.Utype === 1) {
+
+      if (userInfo?.details?.Utype == 1) {
         navigate("/auth");
       } else {
-        navigate("/auth/customer");
+        navigate("/auth/feedback");
       }
     } else if (isError && !isloading && !isSuccess) {
       toast.error(error, { autoClose: 6000, position: "top-right" });
@@ -60,7 +61,7 @@ function Login() {
     event.preventDefault();
     dispatch(authenticate(data));
   };
-  console.log("hi");
+  // console.log("hi");
 
   return (
     <Form

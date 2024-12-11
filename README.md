@@ -68,3 +68,6 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+<!-- {"auth":"{\"isloading\":false,\"userInfo\":{\"msg\":\"User Successfully login\",\"details\":{\"ID\":1,\"LoginCode\":9999999999,\"Name\":\"Debolina Halder\",\"UUid\":\"\",\"Email\":\"debolina@gmail.com\",\"PhoneNumber\":9477850981,\"Password\":\"Abc@123\",\"Pass\":\"Abc@123\",\"Utype\":1,\"LogOut\":1,\"Active\":1,\"EndDate\":null,\"CompanyCode\":\"NSPL\",\"createdAt\":\"2024-10-17T13:51:34.000Z\",\"updatedAt\":\"2024-10-17T13:51:34.000Z\",\"AccessToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWlkIjoiIiwiaWF0IjoxNzMzMjkyNzQ0LCJleHAiOjE3MzMyOTYzNDR9.MI2J_bmtlhpEXWeW5cTk9C7v9hyHydyxdVudWJeKgbg\",\"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWlkIjoiIiwiaWF0IjoxNzMzMjkyNzQ0LCJleHAiOjE3MzMzNzkxNDR9.JZN2yWawbV_DPmFjREDomjMASQh7SCRdyFMWPFgQxiM\"}},\"error\":\"\",\"toasterBool\":true,\"isError\":false,\"isSuccess\":true}","_persist":"{\"version\":-1,\"rehydrated\":true}"} -->

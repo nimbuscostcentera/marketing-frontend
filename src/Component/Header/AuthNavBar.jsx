@@ -13,12 +13,12 @@ function AuthNavBar() {
   const [show, setShow] = useState(false);
   const dispatch = useDispatch();
   // Menu items array with icons and labels
-  const menuItems = [
-    { name: "Home", href: "/home", iconName: "house" },
-    { name: "Explore", href: "/explore", iconName: "compass" },
-    { name: "Messages", href: "/messages", iconName: "envelope" },
-    { name: "Zone", href: "/settings", iconName: "gear" },
-  ];
+  // const menuItems = [
+  //   { name: "Home", href: "/home", iconName: "house" },
+  //   { name: "Explore", href: "/explore", iconName: "compass" },
+  //   { name: "Messages", href: "/messages", iconName: "envelope" },
+  //   { name: "Zone", href: "/settings", iconName: "gear" },
+  // ];
 
   // Toggle the offcanvas sidebar (ribbon)
   function toggleNav() {
@@ -29,7 +29,10 @@ function AuthNavBar() {
     const logo = document.getElementById("Header-logo");
     logo.classList.toggle("closed");
     setShow(!show);
+    // const { userInfo } = useSelector((state) => state.auth)
   }
+  const { userInfo } = useSelector((state) => state.auth);
+  console.log(userInfo)
   return (
     <nav className=" px-md-4 py-1 my-0 navbar navbar-expand">
       <div className="sidebar" id="mySidebar">
@@ -45,24 +48,40 @@ function AuthNavBar() {
           <Link to={"/auth"}>
             <i className="bi bi-bar-chart"></i> <span>Dashboard</span>
           </Link>
-          <Link to={"/auth/area"}>
-            <i className="bi bi-geo-alt-fill"></i> <span>Area Manager</span>
-          </Link>
+
+          {userInfo?.permission_check?.is_area == 1 && (
+            <Link to={"/auth/area"}>
+              <i className="bi bi-geo-alt-fill"></i> <span>Area Manager</span>
+            </Link>
+          )}
+
           <Link to="/auth/customer">
             <i className="bi bi-person-fill"></i> <span>Customer Manager</span>
           </Link>
+
+          {userInfo?.permission_check?.is_companyreg == 1 && (
+            <Link to="/auth/company-register">
+              <i className="bi bi-person-fill"></i>{" "}
+              <span>Company Register</span>
+            </Link>
+          )}
+
           <Link to="/auth/feedback">
             <i className="bi bi-hand-thumbs-up-fill"></i>
             <span>Feedback Manager</span>
           </Link>
-          <Link to="/auth/geo-loc">
-            <i className="bi bi-crosshair"></i>
-            <span>Location Manager</span>
-          </Link>
-          <Link to="/auth/salesman">
-            <i class="bi bi-person-workspace"></i>
-            <span>SalesMan Manager</span>
-          </Link>
+          {userInfo?.permission_check?.is_location == 1 && (
+            <Link to="/auth/geo-loc">
+              <i className="bi bi-crosshair"></i>
+              <span>Location Manager</span>
+            </Link>
+          )}
+          {userInfo?.permission_check?.is_salesman == 1 && (
+            <Link to="/auth/salesman">
+              <i class="bi bi-person-workspace"></i>
+              <span>SalesMan Manager</span>
+            </Link>
+          )}
         </div>
       </div>
       <div className="main d-flex align-items-center justify-content-between">

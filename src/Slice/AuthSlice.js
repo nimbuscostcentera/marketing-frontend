@@ -12,6 +12,7 @@ export const authenticate = createAsyncThunk(
         },
       };
       const { data } = await axios.post(URL, UserData, config);
+      // console.log(data?.response);
       return data?.response;
     } catch (error) {
       return rejectWithValue(error.response.data.response);
@@ -52,6 +53,8 @@ const AuthSlice = createSlice({
         state.isSuccess = true;
         state.userInfo = payload;
         state.toasterBool = true;
+        localStorage.setItem("AccessToken", payload?.details?.AccessToken);
+        localStorage.setItem("RefreshToken", payload?.details?.refreshToken);
       })
       .addCase(authenticate.rejected, (state, { payload }) => {
         state.isloading = false;
