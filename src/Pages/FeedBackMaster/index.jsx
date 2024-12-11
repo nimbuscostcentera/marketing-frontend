@@ -44,6 +44,7 @@ function FeedBackMaster() {
   const { userInfo } = useSelector((state) => state?.auth);
   const { CustomerList } = useFetchCustomer({
     CompanyCode: userInfo?.details?.CompanyCode,
+    User_Type: userInfo?.details?.Utype,
   });
   const InputHandler = (e) => {
     const key = e.target.name;
@@ -88,18 +89,25 @@ function FeedBackMaster() {
       remarks: null,
     });
   };
-  const SubmitHandler = (e) => {
-    e.preventDefault();
-    console.log(fbData);
-    let arr = [fbData?.Custstatus];
-    let mergedString = arr.join(",");
-    let { feedBack, ...ob } = fbData;
-    ob.remarks = mergedString;
-    ob.CompanyCode = userInfo?.details?.CompanyCode;
-    ob.ID_USER = userInfo?.details?.ID;
-    console.log(fbData?.feedBack, mergedString);
-    dispatch(AddFeedBack(ob));
+const SubmitHandler = (e) => {
+  e.preventDefault();
+
+  // Log the current state for debugging
+  console.log(fbData);
+
+  // Prepare data for API submission
+  const ob = {
+    ...fbData, // Include all fields from fbData
+    Custstatus: fbData?.Custstatus?.join(","), // Convert Custstatus array to a comma-separated string
+    CompanyCode: userInfo?.details?.CompanyCode, // Add CompanyCode from user info
+    ID_USER: userInfo?.details?.ID, // Add ID_USER from user info
   };
+
+  // Dispatch the action to send the feedback data
+  console.log("Submitting feedback:", ob);
+  dispatch(AddFeedBack(ob));
+};
+
   const custcol = [
     {
       field: "CoName",
@@ -174,6 +182,7 @@ function FeedBackMaster() {
   const { FBTypeListData } = useFetchFBType(
     {
       CompanyCode: userInfo?.details?.CompanyCode,
+      User_Type: userInfo?.details?.User_Type,
     },
     []
   );
@@ -236,8 +245,8 @@ function FeedBackMaster() {
                     Name={"CoName"}
                     error={false}
                     errorMsg={"false"}
-                    label={"CompanyName"}
-                    placeholder={"CompanyName"}
+                    label={"Customer Name"}
+                    placeholder={"Customer Name"}
                     type={"text"}
                     value={fbData?.CoName || ""}
                   />

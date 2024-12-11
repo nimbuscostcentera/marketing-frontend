@@ -49,7 +49,8 @@ function Index() {
 
   const { CompList } = useFetchCompany(
     {
-      CompanyCode: userInfo?.details?.CompanyCode,
+      CountryCode: userInfo?.details?.ID_Country,
+      User_Type: userInfo?.details?.Utype,
     },
     []
   );

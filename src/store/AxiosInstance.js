@@ -1,121 +1,115 @@
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { ClearState } from "../../Slice/Auth/AuthSlice";
-import React from "react";
-import { useNavigate } from "react-dom";
 
-const URL = `${import.meta.env.VITE_BASEURL}`;
+const URL = `${process.env.REACT_APP_BASEURL}`;
 
-// var RefreshToken = localStorage.getItem("RefreshToken");
-
+// Create an Axios instance
 const AxiosInstance = axios.create({
   baseURL: URL,
-  // timeout: 2000,
 });
 
+// Function to load the Access Token
 function loadToken() {
   return new Promise((resolve, reject) => {
     const checkToken = () => {
       const token = localStorage.getItem("AccessToken");
       if (token) {
         resolve(token);
-      }
-      else {
-        //Check again after a short delay
-        setTimeout(checkToken, 10000); // Delay can be adjusted as needed
-        
+      } else {
+        // Retry after a short delay if the token is not found
+        setTimeout(checkToken, 1000); // Adjust delay as needed
       }
     };
     checkToken();
   });
 }
 
-// Request interceptor
+// Request Interceptor
 AxiosInstance.interceptors.request.use(
-  async function (config) {
+  async (config) => {
     try {
-      // Load the token and wait until it is available
+      // Load the Access Token
       const token = await loadToken();
+      if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
+      }
 
-      // Add the token to the request headers
-      config.headers["Authorization"] = `Bearer ${token}`;
+      // Load the Refresh Token and add it to the request headers (if needed)
+      const refreshToken = localStorage.getItem("RefreshToken");
+      if (refreshToken) {
+        config.headers["RefreshToken"] = refreshToken;
+      }
 
-      // Return the modified config object to proceed with the request
-      return config;
-    }
-    catch (error) {
-        console.log(error);
-      // Handle errors in token loading (e.g., token not available)
-      return Promise.reject(new Error("Failed to load token."));
+      return config; // Return the modified config
+    } catch (error) {
+      console.error("Failed to set request headers:", error);
+      return Promise.reject(error);
     }
   },
-  function (error) {
-    // Handle request errors (optional)
-    console.log(error);
+  (error) => {
+    console.error("Request error:", error);
     return Promise.reject(error);
   }
 );
 
-// Attach response interceptor
+// Response Interceptor
 AxiosInstance.interceptors.response.use(
-  (response) => response, // Pass through successful responses
+  (response) => {
+    // Pass through successful responses
+    return response;
+  },
   async (error) => {
     const originalRequest = error.config;
 
-    // Check if the response status is 401 (unauthorized) and the request has not been retried yet
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // Set retry flag
+    // Handle 401 Unauthorized errors
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      localStorage.getItem("RefreshToken")
+    ) {
+      originalRequest._retry = true; // Mark the request as retried
 
-      // Get the refresh token from local storage
-      const refreshToken = localStorage.getItem("RefreshToken");
+      try {
+        // Create a temporary Axios instance for token refresh
+        const AxiosRes = axios.create({
+          baseURL: URL,
+        });
 
-      // Check if refresh token is available
-      if (refreshToken) {
-        try {
-          // Call the token regeneration API
-          const AxiosRes = axios.create({
-            baseURL: `${import.meta.env.VITE_BASEURL}`,
-          });
-          AxiosRes.defaults.headers.common[
-            "Authorization"
-          ] = `Bearer ${refreshToken}`;
+        const refreshToken = localStorage.getItem("RefreshToken");
+        // console.log(refreshToken);
+        // Add the Refresh Token to the headers
+        AxiosRes.defaults.headers["Authorization"] = `Bearer ${refreshToken}`;
 
-          const response = await AxiosRes.post(
-            `/auth-routes/token-generate`,
-            {}
-          );
+        // Call the token refresh API
+        const refreshResponse = await AxiosRes.post(
+          `/auth-routes/token-generate`,
+          {}
+        );
 
-          // Check for a successful response
-          if (response.status === 200) {
-            // Get the new access token from the response
-            console.log(response);
-            const newAccessToken = response.data?.response?.AccessToken;
+        if (refreshResponse.status === 200) {
+          // Extract the new Access Token
+          const newAccessToken = refreshResponse.data?.response?.AccessToken;
 
-            // Store the new access token in local storage
-            localStorage.setItem("AccessToken", newAccessToken);
+          // Update localStorage with the new Access Token
+          localStorage.setItem("AccessToken", newAccessToken);
 
-            // Update the original request with the new access token
-            originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+          // Update the original request headers with the new Access Token
+          originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
 
-            // Retry the original request
-            return AxiosInstance(originalRequest);
-          }
-        } catch (refreshError) {
-          // Handle refresh error (e.g., refresh token expired)
-          if (refreshError.response && refreshError.response.status === 402) {
-            // Refresh token expired, logout the user
-            localStorage.clear();
-            window.location.reload();
-          } else {
-            console.error("Failed to refresh access token:", refreshError);
-          }
+          // Retry the original request with the updated headers
+          return AxiosInstance(originalRequest);
         }
-      } else {
-        console.warn("Refresh token not found, cannot refresh access token.");
+      } catch (refreshError) {
+        console.error("Token refresh failed:", refreshError);
+
+        if (refreshError.response?.status === 402) {
+          // If Refresh Token is expired, log out the user
+          localStorage.clear();
+          window.location.reload();
+        }
       }
     }
 
-    // If the request could not be retried or if the error is not 401, reject the promise
+    console.error("Response error:", error);
     return Promise.reject(error);
   }
 );

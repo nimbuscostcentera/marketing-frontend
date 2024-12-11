@@ -6,7 +6,7 @@ import { Navbar, Container, Nav, Offcanvas, Button } from "react-bootstrap";
 import Image from "../../Asset/Nimbus_Logo_Transparent_white.png";
 
 
-const NavigationBar = () => {
+const  NavigationBar = () => {
   const [show, setshow] = useState(false);
   const handleClose = () => {
     setshow(false);
