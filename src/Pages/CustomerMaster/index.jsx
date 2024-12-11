@@ -343,23 +343,6 @@ function CustomerMaster() {
         };
       });
     }
-    // else if (key === "id_state") {
-    //   setCustData({
-    //     ...custData,
-    //     id_city: -1,
-    //     id_area: -1,
-    //     [key]: value,
-    //    });
-    // } else  if (key === "id_city") {
-    //   setCustData({
-    //     ...custData,
-    //     id_area: -1,
-    //     [key]: value,
-    //   });
-    // } else {
-
-    //   setCustData({ ...custData, [key]: value });
-    // }
     setCustData((prev) => ({
       ...prev,
       [key]: value,
@@ -707,7 +690,7 @@ function CustomerMaster() {
                   value={custData?.EmailId || ""}
                   Name={"EmailId"}
                   error={!inputVal?.EmailId}
-                  errorMsg={"Enter Correct Phone Number"}
+                  errorMsg={"Enter Correct Email id"}
                   maxlen={50}
                   onChange={(e) => {
                     if (

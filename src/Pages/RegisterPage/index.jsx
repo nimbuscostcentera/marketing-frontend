@@ -16,35 +16,41 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import EmailValidation from "../../Validators/EmailValidation.js";
 // import {
-//   CompRegClearState, 
+//   CompRegClearState,
 //   CustRegFunc,
 // } from "../../Slice/CustomerRegSlice.js";
 import useFetchCountry from "../../Custom_Hooks/useFetchCountry.js";
-import { CompanyRegFunc, CompRegClearState } from "../../Slice/CompanyRegSlice.js";
+import {
+  CompanyRegFunc,
+  CompRegClearState,
+} from "../../Slice/CompanyRegSlice.js";
+import useFetchState from "../../Custom_Hooks/useFetchState.js";
+import MultipleSelection from "../../Component/MultipleSelection/index.jsx";
 
 function CompanyRegisterMaster() {
-    const utypeOptions = [
-      { ID: 1, description: "All countries" },
-      { ID: 2, description: "One country" },
-      { ID: 3, description: "Some states" },
-      { ID: 4, description: "Individual" },
-    ];
- const [custData, setCustData] = useState({
-   companyName: "",
-   CompanyCode: "",
-   GSTIN: "",
-   PANNo: "",
-   Country: "",
-   Utype: "",
-   Address: "",
-   Name: "",
-   ContactNumber: "",
-   Email: "",
-   pass: "",
- });
+  const utypeOptions = [
+    { ID: 1, description: "All countries" },
+    { ID: 2, description: "One country" },
+    { ID: 3, description: "Some states" },
+    { ID: 4, description: "Individual" },
+  ];
+  const [custData, setCustData] = useState({
+    companyName: "",
+    CompanyCode: "",
+    GSTIN: "",
+    PANNo: "",
+    Country: "",
+    Utype: "",
+    Address: "",
+    Name: "",
+    ContactNumber: "",
+    Email: "",
+    pass: "",
+    id_state: [],
+  });
 
   const dispatch = useDispatch();
-//   const navigate = useNavigate();
+  //   const navigate = useNavigate();
   const {
     isComRegLoding,
     CompRegSuccessMsg,
@@ -53,7 +59,7 @@ function CompanyRegisterMaster() {
     isCompRegSuccess,
   } = useSelector((state) => state.compreg);
   const { userInfo } = useSelector((state) => state.auth);
-// //console.log(CompRegErrorMsg, CompRegSuccessMsg);
+  // //console.log(CompRegErrorMsg, CompRegSuccessMsg);
 
   //Fetch the country list
   const { CountryListData } = useFetchCountry(
@@ -62,7 +68,14 @@ function CompanyRegisterMaster() {
     },
     []
   );
-
+  // Fetch state data list
+  const { StateListData } = useFetchState(
+    {
+      CompanyCode: userInfo?.details?.CompanyCode,
+      CountryCode: custData.Country,
+    },
+    [custData.Country]
+  );
 
   //validator
   const [inputVal, setInputVal] = useState({
@@ -71,8 +84,6 @@ function CompanyRegisterMaster() {
     PinCode: true,
     ContactNumber: true,
   });
-
-
 
   //country
   let SelectCountryList = useMemo(() => {
@@ -85,7 +96,20 @@ function CompanyRegisterMaster() {
     }));
     return [...arr, ...arr1];
   }, [CountryListData]);
-  //country
+
+  //state list
+  // let SelectStateList = useMemo(() => {
+  //   if (!StateListData) return [];
+  //   let arr = [];
+  //   arr.push({ Name: "---Select State--", Value: -1 });
+  //   let arr1 = StateListData.map((item) => ({
+  //     Name: item?.state,
+  //     Value: item?.["ID"],
+  //   }));
+  //   return [...arr, ...arr1];
+  // }, [StateListData]);
+
+  //user type
   let SelectUserType = useMemo(() => {
     if (!utypeOptions) return [];
     let arr = [];
@@ -96,7 +120,7 @@ function CompanyRegisterMaster() {
     }));
     return [...arr, ...arr1];
   }, [utypeOptions]);
-    
+
   //toaster
   useEffect(() => {
     if (isCompRegSuccess && !isCompRegErrorMsg & !isComRegLoding) {
@@ -116,6 +140,7 @@ function CompanyRegisterMaster() {
         ContactNumber: "",
         Email: "",
         pass: "",
+        id_state: [],
       });
       dispatch(CompRegClearState());
     }
@@ -131,6 +156,18 @@ function CompanyRegisterMaster() {
   const InputHandler = (e) => {
     var key = e.target.name;
     var value = e.target.value;
+
+    if (key === "Country") {
+      // setCustData({
+      //   ...custData,
+      //   id_city: -1,
+      //   id_state: -1,
+      //   id_area: -1,
+      // })
+      setCustData((prev) => {
+        return { ...prev, id_state: [] };
+      });
+    }
     setCustData((prev) => ({
       ...prev,
       [key]: value,
@@ -147,8 +184,34 @@ function CompanyRegisterMaster() {
       })
     );
   };
-
-
+// console.log(custData)
+  //multiple selection handler
+  const SelectHandler1 = (e) => {
+    let value = e.target.value;
+    let AllValue = StateListData?.map((i) => i?.ID);
+  // console.log(AllValue) 
+    // Handle the 'All' selection case
+    if (value === "all") {
+      if (custData?.id_state?.length === AllValue?.length) {
+        setCustData({ ...custData, id_state: [] }); // Deselect all
+      } else {
+        setCustData({ ...custData, id_state: AllValue }); // Select all
+      }
+    } else {
+      value = Number(value);
+      let arr = [...(custData?.id_state || [])]; // Ensure it's always an array
+  
+      // Add or remove selected value
+      if (arr.includes(value)) {
+        arr = arr.filter((item) => item !== value); // Remove if already selected
+      } else {
+        arr.push(value); // Add if not selected
+      }
+  
+      setCustData({ ...custData, id_state: arr });
+    }
+  };
+  
   return (
     <Container
       fluid
@@ -244,7 +307,7 @@ function CompanyRegisterMaster() {
               </Col>
               <Col md={6}>
                 <SelectOption
-                  PlaceHolder={"Country"}
+                  PlaceHolder={"Utype"}
                   SName={"Utype"}
                   SelectStyle={{
                     padding: "4px 10px",
@@ -258,7 +321,7 @@ function CompanyRegisterMaster() {
               </Col>
 
               {/*Address*/}
-              <Col md={12}>
+              <Col md={6}>
                 <InputGroup className="mb-3">
                   <InputGroup.Text className="color-label">
                     <i className="bi bi-geo-alt"></i>
@@ -272,6 +335,18 @@ function CompanyRegisterMaster() {
                     onChange={InputHandler}
                   />
                 </InputGroup>
+              </Col>
+              <Col md={6}>
+                <MultipleSelection
+                  FieldName={"state"}
+                  MName={"state"}
+                  onChange={SelectHandler1}
+                  uniqueKey={"ID"}
+                  data={StateListData} // Ensure that this data is passed correctly
+                  State={custData?.id_state} // Map this correctly to the id_state in custData
+                  StyleInput={{ marginTop: "1px", marginBottom: "15px" }}
+                  dataLength={StateListData?.length}
+                />
               </Col>
             </Row>
           </Col>
