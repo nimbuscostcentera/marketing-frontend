@@ -26,14 +26,15 @@ import {
 } from "../../Slice/CompanyRegSlice.js";
 import useFetchState from "../../Custom_Hooks/useFetchState.js";
 import MultipleSelection from "../../Component/MultipleSelection/index.jsx";
+import useFetchUserType from "../../Custom_Hooks/usefetchUserType.js";
 
 function CompanyRegisterMaster() {
-  const utypeOptions = [
-    { ID: 1, description: "All countries" },
-    { ID: 2, description: "One country" },
-    { ID: 3, description: "Some states" },
-    { ID: 4, description: "Individual" },
-  ];
+  // const UserTypeListData = [
+  //   { ID: 1, description: "All countries" },
+  //   { ID: 2, description: "One country" },
+  //   { ID: 3, description: "Some states" },
+  //   { ID: 4, description: "Individual" },
+  // ];
   const [custData, setCustData] = useState({
     companyName: "",
     CompanyCode: "",
@@ -68,6 +69,12 @@ function CompanyRegisterMaster() {
     },
     []
   );
+  //Fetch the User Type list
+  const { UserTypeListData } = useFetchUserType(
+    {
+    },
+    []
+  );
   // Fetch state data list
   const { StateListData } = useFetchState(
     {
@@ -97,29 +104,18 @@ function CompanyRegisterMaster() {
     return [...arr, ...arr1];
   }, [CountryListData]);
 
-  //state list
-  // let SelectStateList = useMemo(() => {
-  //   if (!StateListData) return [];
-  //   let arr = [];
-  //   arr.push({ Name: "---Select State--", Value: -1 });
-  //   let arr1 = StateListData.map((item) => ({
-  //     Name: item?.state,
-  //     Value: item?.["ID"],
-  //   }));
-  //   return [...arr, ...arr1];
-  // }, [StateListData]);
 
   //user type
   let SelectUserType = useMemo(() => {
-    if (!utypeOptions) return [];
+    if (!UserTypeListData) return [];
     let arr = [];
     arr.push({ Name: "---Select User type--", Value: -1 });
-    let arr1 = utypeOptions.map((item) => ({
+    let arr1 = UserTypeListData.map((item) => ({
       Name: item?.description,
       Value: item?.["ID"],
     }));
     return [...arr, ...arr1];
-  }, [utypeOptions]);
+  }, [UserTypeListData]);
 
   //toaster
   useEffect(() => {
@@ -158,12 +154,7 @@ function CompanyRegisterMaster() {
     var value = e.target.value;
 
     if (key === "Country") {
-      // setCustData({
-      //   ...custData,
-      //   id_city: -1,
-      //   id_state: -1,
-      //   id_area: -1,
-      // })
+    
       setCustData((prev) => {
         return { ...prev, id_state: [] };
       });
@@ -221,7 +212,7 @@ function CompanyRegisterMaster() {
       <ToastContainer />
       <div className="ms-4">
         <div className="d-flex justify-content-between align-items-center m-0 px-3">
-          <h5 className="title_container mt-2">Company Register</h5>
+          <h5 className="title_container mt-2">Company Management</h5>
         </div>
 
         <hr style={{ marginBottom: "10px", marginTop: "5px" }} />
@@ -229,7 +220,7 @@ function CompanyRegisterMaster() {
       <Form className="form_wrapper mx-md-5 mx-sm-1 px-md-4 ">
         <Row>
           <Col xs={12}>
-            <h6>Company Register Form</h6>
+            {/* <h6>Company Register Form</h6> */}
             <hr />
           </Col>
           <Col xl={6}>
@@ -321,7 +312,7 @@ function CompanyRegisterMaster() {
               </Col>
 
               {/*Address*/}
-              <Col md={6}>
+              <Col md={12}>
                 <InputGroup className="mb-3">
                   <InputGroup.Text className="color-label">
                     <i className="bi bi-geo-alt"></i>
@@ -335,18 +326,6 @@ function CompanyRegisterMaster() {
                     onChange={InputHandler}
                   />
                 </InputGroup>
-              </Col>
-              <Col md={6}>
-                <MultipleSelection
-                  FieldName={"state"}
-                  MName={"state"}
-                  onChange={SelectHandler1}
-                  uniqueKey={"ID"}
-                  data={StateListData} // Ensure that this data is passed correctly
-                  State={custData?.id_state} // Map this correctly to the id_state in custData
-                  StyleInput={{ marginTop: "1px", marginBottom: "15px" }}
-                  dataLength={StateListData?.length}
-                />
               </Col>
             </Row>
           </Col>
@@ -422,6 +401,22 @@ function CompanyRegisterMaster() {
                   onChange={InputHandler}
                 />{" "}
               </Col>
+
+              <Col md={6}>
+                {custData.Utype == "3" && custData.Country && (
+                  <MultipleSelection
+                    FieldName={"state"}
+                    MName={"state"}
+                    onChange={SelectHandler1}
+                    uniqueKey={"ID"}
+                    data={StateListData} // Ensure that this data is passed correctly
+                    State={custData?.id_state} // Map this correctly to the id_state in custData
+                    StyleInput={{ marginTop: "1px", marginBottom: "15px" }}
+                    dataLength={StateListData?.length}
+                  />
+                )}
+              </Col>
+              <Col md={6}></Col>
             </Row>
           </Col>
           <Col xs={6}>

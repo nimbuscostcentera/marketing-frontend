@@ -16,7 +16,7 @@ function MultipleSelection({
   return (
     <details style={StyleInput}>
       <summary className="select-box">--Select {FieldName}--</summary>
-      <ul className="ul-div">
+      <ul className="ul-div" style={{ height: "200px", overflowY: "scroll" }}>
         <li className="list-box">
           <Form.Check
             type="checkbox"
@@ -28,12 +28,12 @@ function MultipleSelection({
         </li>
         {data?.map((item, index) => {
           // console.log(
-            // console.log(item);
-            //   State?.includes(item[`${uniqueKey}`]),
-            //   item[`${uniqueKey}`],State
-            // );
-            console.log(State)
-          
+          // console.log(item);
+          //   State?.includes(item[`${uniqueKey}`]),
+          //   item[`${uniqueKey}`],State
+          // );
+          console.log(State);
+
           return (
             <li key={index} className="list-box">
               <Form.Check
