@@ -74,7 +74,7 @@ function Index() {
     let value = e.target.value;
     setSmData({ ...smData, [key]: value });
   };
-  const ResetHandler = (e) => {
+  const ResetHandler = () => {
     setSmData({
       PHONE: null,
       CompanyCode: null,
@@ -91,6 +91,7 @@ function Index() {
     let obj = {
       ...smData,
       CompanyCode: userInfo?.details?.CompanyCode,
+      ID_Country:userInfo?.details?.ID_Country
     };
     dispatch(AddSalesManFunc(obj));
   };
@@ -175,7 +176,7 @@ function Index() {
                     onChange={InputHandler}
                     placeholder={"SalesMan name"}
                     type={"text"}
-                    value={smData?.NAME}
+                    value={smData?.NAME||""}
                   />
                 </Col>
                 <Col md={6}>
@@ -204,6 +205,7 @@ function Index() {
                     placeholder={"Phone No."}
                     type={"tel"}
                     value={smData?.PHONE || ""}
+                    maxlen={10}
                   />
                 </Col>
 
@@ -277,7 +279,7 @@ function Index() {
                     onChange={InputHandler}
                     placeholder={"Target Amount"}
                     type={"number"}
-                    value={smData?.TrgAmt}
+                    value={smData?.TrgAmt||""}
                   />
                 </Col>
                 <Col md={6}>
@@ -290,7 +292,7 @@ function Index() {
                     onChange={InputHandler}
                     placeholder={"Lisence No"}
                     type={"text"}
-                    value={smData?.LISCENCENO}
+                    value={smData?.LISCENCENO||""}
                   />
                 </Col>
                 <Col md={6}>
@@ -303,7 +305,7 @@ function Index() {
                     onChange={InputHandler}
                     placeholder={"VAT No"}
                     type={"text"}
-                    value={smData?.vat_no}
+                    value={smData?.vat_no||""}
                   />
                 </Col>
 
