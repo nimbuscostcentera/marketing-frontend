@@ -111,7 +111,7 @@ const SubmitHandler = (e) => {
   const custcol = [
     {
       field: "CoName",
-      headerName: "Company Name",
+      headerName: "Customer Name",
       width: 150,
     },
     {
@@ -252,7 +252,7 @@ const SubmitHandler = (e) => {
                   />
                   <ReusableModal
                     show={show}
-                    Title={"Company"}
+                    Title={"Customer List"}
                     handleClose={HandleClose}
                     isPrimary={true}
                     body={

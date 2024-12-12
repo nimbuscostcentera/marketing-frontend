@@ -445,8 +445,8 @@ function CustomerMaster() {
                 <InputBox
                   Icon={<i className="bi bi-building small-icon"></i>}
                   type={"text"}
-                  placeholder={"Company Name"}
-                  label={"Company Name"}
+                  placeholder={"Customer Name"}
+                  label={"Customer Name"}
                   value={custData?.CoName || ""}
                   Name={"CoName"}
                   error={false}

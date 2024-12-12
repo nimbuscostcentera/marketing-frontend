@@ -61,8 +61,7 @@ function AuthNavBar() {
 
           {userInfo?.permission_check?.is_companyreg == 1 && (
             <Link to="/auth/company-register">
-              <i className="bi bi-person-fill"></i>{" "}
-              <span>Company Register</span>
+              <i className="bi bi-building"></i> <span>Company Register</span>
             </Link>
           )}
 

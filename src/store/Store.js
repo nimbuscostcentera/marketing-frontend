@@ -33,6 +33,7 @@ import BusinessSlice from "../Slice/BusinessSlice";
 import AddIndustrySlice from "../Slice/AddIndustrySlice";
 import CustTypeListSlice from "../Slice/CustomerTypeSlice";
 import FBTypeListSlice from "../Slice/FeedBackTypeSlice";
+import UserTypeListSlice from "../Slice/UserTypeListSlice";
 
 const rootReducer = combineReducers({
   auth: AuthSlice,
@@ -66,6 +67,7 @@ const rootReducer = combineReducers({
   weekdayslist: WeekDaysListSlice,
   custtypelist: CustTypeListSlice,
   fbtypelist: FBTypeListSlice,
+  usertypelist: UserTypeListSlice,
 });
 const persistConfig = {
   key: "root",

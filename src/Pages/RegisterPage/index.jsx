@@ -26,14 +26,15 @@ import {
 } from "../../Slice/CompanyRegSlice.js";
 import useFetchState from "../../Custom_Hooks/useFetchState.js";
 import MultipleSelection from "../../Component/MultipleSelection/index.jsx";
+import useFetchUserType from "../../Custom_Hooks/usefetchUserType.js";
 
 function CompanyRegisterMaster() {
-  const utypeOptions = [
-    { ID: 1, description: "All countries" },
-    { ID: 2, description: "One country" },
-    { ID: 3, description: "Some states" },
-    { ID: 4, description: "Individual" },
-  ];
+  // const UserTypeListData = [
+  //   { ID: 1, description: "All countries" },
+  //   { ID: 2, description: "One country" },
+  //   { ID: 3, description: "Some states" },
+  //   { ID: 4, description: "Individual" },
+  // ];
   const [custData, setCustData] = useState({
     companyName: "",
     CompanyCode: "",
@@ -65,6 +66,12 @@ function CompanyRegisterMaster() {
   const { CountryListData } = useFetchCountry(
     {
       CompanyCode: userInfo?.details?.CompanyCode,
+    },
+    []
+  );
+  //Fetch the User Type list
+  const { UserTypeListData } = useFetchUserType(
+    {
     },
     []
   );
@@ -100,15 +107,15 @@ function CompanyRegisterMaster() {
 
   //user type
   let SelectUserType = useMemo(() => {
-    if (!utypeOptions) return [];
+    if (!UserTypeListData) return [];
     let arr = [];
     arr.push({ Name: "---Select User type--", Value: -1 });
-    let arr1 = utypeOptions.map((item) => ({
+    let arr1 = UserTypeListData.map((item) => ({
       Name: item?.description,
       Value: item?.["ID"],
     }));
     return [...arr, ...arr1];
-  }, [utypeOptions]);
+  }, [UserTypeListData]);
 
   //toaster
   useEffect(() => {
@@ -396,19 +403,18 @@ function CompanyRegisterMaster() {
               </Col>
 
               <Col md={6}>
-                {custData.Utype == "3" &&( custData.Country != -1 ||
-                  custData.Country != null) && (
-                    <MultipleSelection
-                      FieldName={"state"}
-                      MName={"state"}
-                      onChange={SelectHandler1}
-                      uniqueKey={"ID"}
-                      data={StateListData} // Ensure that this data is passed correctly
-                      State={custData?.id_state} // Map this correctly to the id_state in custData
-                      StyleInput={{ marginTop: "1px", marginBottom: "15px" }}
-                      dataLength={StateListData?.length}
-                    />
-                  )}
+                {custData.Utype == "3" && custData.Country && (
+                  <MultipleSelection
+                    FieldName={"state"}
+                    MName={"state"}
+                    onChange={SelectHandler1}
+                    uniqueKey={"ID"}
+                    data={StateListData} // Ensure that this data is passed correctly
+                    State={custData?.id_state} // Map this correctly to the id_state in custData
+                    StyleInput={{ marginTop: "1px", marginBottom: "15px" }}
+                    dataLength={StateListData?.length}
+                  />
+                )}
               </Col>
               <Col md={6}></Col>
             </Row>
