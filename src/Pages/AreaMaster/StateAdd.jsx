@@ -17,7 +17,8 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function StateAdd() {
   const location = useLocation();
-  const { countryId } = location.state;
+  let { countryId } = location.state || {};
+   countryId = countryId === null ? "-1" : countryId;
   const [data, setData] = useState({ State_name: "", id_country: countryId });
   const dispatch = useDispatch();
   const [stateId, setStateId] = useState([]);

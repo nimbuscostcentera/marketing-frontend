@@ -44,7 +44,8 @@ function Login() {
       } else {
         navigate("/auth/feedback");
       }
-    } else if (isError && !isloading && !isSuccess) {
+    }
+    if (isError && !isloading && !isSuccess) {
       toast.error(error, { autoClose: 6000, position: "top-right" });
     }
   }, [userInfo?.details?.Utype !== undefined]);
@@ -115,6 +116,9 @@ function Login() {
             onChange={(e) => {
               setShowPass(!showPass);
             }}
+            Name={"showPass"}
+            Value={showPass?false:true}
+            checkid={showPass}
           />
         </Col>
         <Col

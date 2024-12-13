@@ -52,7 +52,7 @@ function SalesManList() {
               onChangeHandler(id);
             }}
             loading={isSalesManLoading}
-            uniquekey={"CODE"}
+            uniquekey={"ID"}
             DataGridHeight={"75vh"}
           />
         </Col>

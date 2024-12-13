@@ -20,7 +20,7 @@ function ReusableDataGrid({
       rows={row || []}
       {...row}
       selectRow
-      checkboxSelection
+      checkboxSelection={checkSelect}
       getRowId={(row) => {
         if (!row) {
           return -1;

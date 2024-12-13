@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { Row, Col, Container, Alert } from "react-bootstrap";
@@ -24,21 +24,24 @@ function Vendor() {
   const currdate = moment();
   const { userInfo } = useSelector((state) => state.auth);
 
-
-  // Fetch the Country Add 
-  const {  isAddVendorLoading,
+  // Fetch the Country Add
+  const {
+    isAddVendorLoading,
     AddVendorSuccessMsg,
     AddVendorErrorMsg,
     isAddVendorError,
-    isAddVendorSuccess} = useSelector(state => state.addVendor);
+    isAddVendorSuccess,
+  } = useSelector((state) => state.addVendor);
 
   //Fetch the country list
-  const { VendorListData } = useFetchVendor({
-    CompanyCode: userInfo?.details?.CompanyCode,
-  }, [isAddVendorSuccess]);
+  const { VendorListData } = useFetchVendor(
+    {
+      CompanyCode: userInfo?.details?.CompanyCode,
+    },
+    [isAddVendorSuccess]
+  );
 
-
-  //useEffect for country add 
+  //useEffect for country add
   useEffect(() => {
     if (isAddVendorSuccess && !isAddVendorError & !isAddVendorLoading) {
       toast.success(AddVendorSuccessMsg, {
@@ -47,50 +50,45 @@ function Vendor() {
       });
       // Reset the specific input field
       setData({ ...data, NAME: "" });
-
     }
 
     if (isAddVendorError && !isAddVendorLoading) {
-      toast.error(AddVendorErrorMsg, { autoClose: 6000, position: "top-right" });
+      toast.error(AddVendorErrorMsg, {
+        autoClose: 6000,
+        position: "top-right",
+      });
     }
     dispatch(ClearStateAddVendor());
     // dispatch(ClearState1());
   }, [isAddVendorError, isAddVendorSuccess, isAddVendorLoading]);
 
+  //Input handler
+  const InputHandler = (e) => {
+    let { name, value } = e.target;
+    setData((prevData) => ({
+      ...prevData,
+      [name]: value.toUpperCase(), // Update the specific property
+    }));
+    // setData({...data,[e.target.name]:e.target.value})
+  };
 
-  //Input handler 
-const InputHandler = (e) => {
-  let { name, value } = e.target;
-  setData((prevData) => ({
-    ...prevData,
-    [name]: value.toUpperCase(), // Update the specific property
-  }));
-// setData({...data,[e.target.name]:e.target.value})
-};
-
-
-
-  // Submit function 
+  // Submit function
   const SubmitHandler = (e) => {
     e.preventDefault();
     // console.log(data)
-    data.NAME = (data?.NAME)?.trim()
-    let obj = { CompanyCode: userInfo?.details?.CompanyCode, ...data }
+    data.NAME = data?.NAME?.trim();
+    let obj = { CompanyCode: userInfo?.details?.CompanyCode, ...data };
     if (obj.NAME === undefined || obj.NAME === null || obj.NAME === "") {
       toast.warning("Please Write a Vendor Name", {
         autoClose: 6000,
         position: "top-right",
       });
     } else {
-      dispatch(
-        AddVendorFunc(obj)
-      );
+      dispatch(AddVendorFunc(obj));
     }
     // Reset the specific input field
     setData({ ...data, NAME: "" });
   };
-
-
 
   const vendorCol = [
     {
@@ -102,17 +100,22 @@ const InputHandler = (e) => {
 
   return (
     <Container fluid>
-
       {/* Toaster  */}
 
       <ToastContainer />
 
-
-      {param.val === true ? <>
-        <Alert className="text-center" variant={'danger'} dismissible onClose={() => setParam({ val: false, message: "" })}>
-          {param.message}
-        </Alert>
-      </> : null}
+      {param.val === true ? (
+        <>
+          <Alert
+            className="text-center"
+            variant={"danger"}
+            dismissible
+            onClose={() => setParam({ val: false, message: "" })}
+          >
+            {param.message}
+          </Alert>
+        </>
+      ) : null}
       <Row>
         <Col xs={12} sm={6} md={6} lg={6} xl={6}>
           <h5 className="ms-5 mt-2">Industry Manager</h5>
@@ -151,7 +154,7 @@ const InputHandler = (e) => {
             <Col xl={6} lg={6} md={6} sm={6} xs={12}>
               <div className="ms-5 my-4">
                 <InputBox
-                  Icon={<i class="bi bi-globe-americas"></i>}
+                  Icon={<i className="bi bi-globe-americas"></i>}
                   type={"text"}
                   Name={"NAME"}
                   error={false}
@@ -163,7 +166,7 @@ const InputHandler = (e) => {
                   onChange={InputHandler}
                   SearchButton={true}
                   SearchHandler={SubmitHandler}
-                  SearchIcon={<i class="bi bi-plus-lg"></i>}
+                  SearchIcon={<i className="bi bi-plus-lg"></i>}
                   key={1}
                 />
               </div>
@@ -171,7 +174,7 @@ const InputHandler = (e) => {
             <Col xl={6} lg={6} md={6} sm={6} xs={12}>
               <div className="ms-3 my-4">
                 <InputBox
-                  Icon={<i class="bi bi-calendar"></i>}
+                  Icon={<i className="bi bi-calendar"></i>}
                   type={"date"}
                   Name={"Date"}
                   error={false}
@@ -197,7 +200,6 @@ const InputHandler = (e) => {
                 key={2}
                 width="100%"
               />
-
             </Col>
           </Row>
         </Col>

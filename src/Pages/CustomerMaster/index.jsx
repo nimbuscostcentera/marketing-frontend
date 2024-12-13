@@ -20,7 +20,7 @@ import "bootstrap/dist/js/bootstrap.min";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap-icons/font/bootstrap-icons.css";
 
-import AreaData from "../../mock-data/Area.js";
+//import AreaData from "../../mock-data/Area.js";
 import BSize from "../../mock-data/BSize.js";
 import statusData from "../../mock-data/Status.js";
 import FilterData from "../../mock-data/UserData.js";
@@ -59,10 +59,9 @@ function CustomerMaster() {
     ADDRESS: null,
     Remarks: null,
     REFNAME: null,
-    ID_Vendor: null,
-    ID_Vendor1: null,
     sold: 0,
     Garbage: 0,
+    BusinessSize: null,
   });
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -174,6 +173,7 @@ function CustomerMaster() {
     PinCode: true,
     Mobile: true,
   });
+//console.log(custData);
 
   //Business size  
   let SelectBSizeList = useMemo(() => {
@@ -218,7 +218,7 @@ function CustomerMaster() {
     arr.push({ Name: "---Select SalesMan--", Value: 0 });
     let arr1 = salesmanList.map((item) => ({
       Name: item?.NAME,
-      Value: item?.["id"],
+      Value: item?.["ID"],
     }));
     return [...arr, ...arr1];
   }, [salesmanList]);
@@ -271,6 +271,30 @@ function CustomerMaster() {
     return [...arr, ...arr1];
   }, [ZoneListData]);
 
+  //Reset
+ const ResetHandler = () => { 
+ setCustData({
+   id_country: null,
+   id_state: null,
+   id_city: null,
+   id_area: null,
+   Area: null,
+   CoName: null,
+   PhNo: null,
+   Mobile: null,
+   PinCode: null,
+   Contact_Name: null,
+   ADDRESS: null,
+   Remarks: null,
+   REFNAME: null,
+   sold: null,
+   Garbage: null,
+   BusinessSize: null,
+   id_salesman: null,
+   id_industry: null,
+ });
+  }
+
   //toaster
   useEffect(() => {
     if (isCustRegSuccess && !isCustRegErrorMsg & !isCustRegLoding) {
@@ -278,25 +302,7 @@ function CustomerMaster() {
         autoClose: 6000,
         position: "top-right",
       });
-      setCustData({
-        id_country: null,
-        id_state: null,
-        id_city: null,
-        id_area: null,
-        Area: null,
-        CoName: null,
-        PhNo: null,
-        Mobile: null,
-        PinCode: null,
-        Contact_Name: null,
-        ADDRESS: null,
-        Remarks: null,
-        REFNAME: null,
-        ID_Vendor: null,
-        ID_Vendor1: null,
-        sold: null,
-        Garbage: null,
-      });
+     ResetHandler()
       dispatch(CustRegClearState());
     }
     if (isCustRegErrorMsg && !isCustRegSuccess && !isCustRegLoding) {
@@ -353,12 +359,12 @@ function CustomerMaster() {
   const SubmitHandler = (e) => {
     e.preventDefault();
     console.log(custData);
-    dispatch(
-      CustRegFunc({
-        ...custData,
-        CompanyCode: userInfo?.details?.CompanyCode,
-      })
-    );
+    // dispatch(
+    //   CustRegFunc({
+    //     ...custData,
+    //     CompanyCode: userInfo?.details?.CompanyCode,
+    //   })
+    // );
   };
   //modal close
   const handleClose = () => {
@@ -539,13 +545,15 @@ function CustomerMaster() {
                   handleClose={handleClose}
                   isSuccess={true}
                   handleSuccess={() => {
-                    let obj = (AreaData?.filter(
-                      (i) => i?.Id_Area === rid?.id_area
+                    let obj = (area?.filter(
+                      (i) => i?.ID === custData?.id_area
                     ))[0];
-                    setCustData({
-                      ...custData,
-                      id_area: obj?.ID,
-                      Area: obj?.Code,
+                    console.log(obj);
+                    setCustData((prev) => {
+                      return {
+                        ...prev,
+                        Area: obj?.AreaCode,
+                      };
                     });
                     handleClose();
                   }}
@@ -557,6 +565,9 @@ function CustomerMaster() {
                       id={rid?.Area}
                       onChangeRow={(id) => {
                         setRid({ ...rid, id_area: id });
+                        setCustData((prev) => {
+                          return { ...prev, id_area: id };
+                        });
                       }}
                     />
                   }
@@ -658,7 +669,7 @@ function CustomerMaster() {
                   Soptions={SelectBSizeList}
                   SName={"BusinessSize"}
                   OnSelect={InputHandler}
-                  Value={custData?.BusinessSize || 0}
+                  Value={custData?.BusinessSize}
                   PlaceHolder={"--Select Business Size--"}
                   SelectStyle={{
                     height: "28px",
@@ -783,48 +794,29 @@ function CustomerMaster() {
               OnClickBtn={SubmitHandler}
               type={"submit"}
               isdisable={
-                !(
-                  custData?.CoName !== null &&
-                  custData?.PhNo !== null &&
-                  custData?.Mobile !== null &&
-                  custData?.ADDRESS !== null &&
-                  custData?.id_area !== null &&
-                  custData?.id_city !== null &&
-                  custData?.id_state !== null &&
-                  custData?.id_country !== null &&
-                  custData?.REFNAME !== null &&
-                  custData?.ID_Vendor !== null &&
-                  custData?.ID_Vendor1 !== null &&
-                  custData?.PinCode !== null &&
-                  custData?.Remarks !== null
-                )
+                false
+
+                //  ( custData?.CoName !== null &&
+                //   custData?.PhNo !== null &&
+                //   custData?.Mobile !== null &&
+                //   custData?.ADDRESS !== null &&
+                //   custData?.id_area !== null &&
+                //   custData?.id_city !== null &&
+                //   custData?.id_state !== null &&
+                //   custData?.id_country !== null &&
+                //   custData?.REFNAME !== null &&
+                //   custData?.ID_Vendor !== null &&
+                //   custData?.ID_Vendor1 !== null &&
+                //   custData?.PinCode !== null &&
+                //   custData?.Remarks !== null
+                // )
               }
             />
           </Col>
           <Col xs={6}>
             <ResetButton
               type={"reset"}
-              onClick={(e) => {
-                setCustData({
-                  id_country: null,
-                  id_state: null,
-                  id_city: null,
-                  id_area: null,
-                  Area: null,
-                  CoName: null,
-                  PhNo: null,
-                  Mobile: null,
-                  PinCode: null,
-                  Contact_Name: null,
-                  ADDRESS: null,
-                  Remarks: null,
-                  REFNAME: null,
-                  ID_Vendor: null,
-                  ID_Vendor1: null,
-                  sold: null,
-                  Garbage: null,
-                });
-              }}
+              onClick={ResetHandler}
             />
           </Col>
         </Row>
