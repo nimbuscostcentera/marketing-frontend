@@ -63,6 +63,7 @@ function AreaMaster() {
     half: 0,
     full: 0,
   });
+//console.log(areaData);
 
   const [InputVal, SetInputVal] = useState({
     othsttime: false,

@@ -14,8 +14,8 @@ function DateRangeInput({
   mindate1,
 }) {
   return (
-    <div className="px-2 py-1 d-flex justify-content-around align-items-center">
-      <div className="px-1">
+    <div className="px-2 py-1 d-flex justify-content-between align-items-center flex-wrap">
+      <div className="pe-1">
         <label style={{ fontSize: "12px" }}>Start Date</label>
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1" className="color-label">
@@ -31,10 +31,11 @@ function DateRangeInput({
             onChange={InputHandler}
             max={maxdate1}
             min={mindate1}
+            style={{ padding: "5px 12px" }}
           />
         </InputGroup>
       </div>
-      <div className="px-1">
+      <div className="ps-1">
         <label style={{ fontSize: "12px" }}>End Date</label>
         <InputGroup className="mb-3">
           <InputGroup.Text id="basic-addon1" className="color-label">
@@ -55,6 +56,7 @@ function DateRangeInput({
             min={mindate2}
             max={maxdate2}
             onChange={InputHandler}
+            style={{ padding: "5px 12px" }}
           />
         </InputGroup>
       </div>

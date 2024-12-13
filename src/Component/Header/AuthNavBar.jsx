@@ -32,7 +32,7 @@ function AuthNavBar() {
     // const { userInfo } = useSelector((state) => state.auth)
   }
   const { userInfo } = useSelector((state) => state.auth);
-  console.log(userInfo)
+  //console.log(userInfo)
   return (
     <nav className=" px-md-4 py-1 my-0 navbar navbar-expand">
       <div className="sidebar" id="mySidebar">
@@ -77,7 +77,7 @@ function AuthNavBar() {
           )}
           {userInfo?.permission_check?.is_salesman == 1 && (
             <Link to="/auth/salesman">
-              <i class="bi bi-person-workspace"></i>
+              <i className="bi bi-person-workspace"></i>
               <span>SalesMan Manager</span>
             </Link>
           )}

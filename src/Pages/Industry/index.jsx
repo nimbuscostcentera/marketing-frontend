@@ -157,7 +157,7 @@ function Industry() {
             <Col xl={6} lg={6} md={6} sm={6} xs={12}>
               <div className="ms-5 my-4">
                 <InputBox
-                  Icon={<i class="bi bi-globe-americas"></i>}
+                  Icon={<i className="bi bi-globe-americas"></i>}
                   type={"text"}
                   Name={"NAME"}
                   error={false}
@@ -169,7 +169,7 @@ function Industry() {
                   onChange={InputHandler}
                   SearchButton={true}
                   SearchHandler={SubmitHandler}
-                  SearchIcon={<i class="bi bi-plus-lg"></i>}
+                  SearchIcon={<i className="bi bi-plus-lg"></i>}
                   key={1}
                 />
               </div>
@@ -177,7 +177,7 @@ function Industry() {
             <Col xl={6} lg={6} md={6} sm={6} xs={12}>
               <div className="ms-3 my-4">
                 <InputBox
-                  Icon={<i class="bi bi-calendar"></i>}
+                  Icon={<i className="bi bi-calendar"></i>}
                   type={"date"}
                   Name={"Date"}
                   error={false}

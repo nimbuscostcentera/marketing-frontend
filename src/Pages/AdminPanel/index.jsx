@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
 import { GRID_CHECKBOX_SELECTION_COL_DEF } from "@mui/x-data-grid";
-import { Container, Button } from "react-bootstrap";
+import { Container, Button, Row, Col } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -71,16 +71,15 @@ function AdminPanel() {
     var key = e.target.name;
     var value = e.target.value;
     // console.log(IndustryListData)
-    
-   if(value != 0){
-    let indName = IndustryListData.filter((item) => {
-      //  console.log( typeof item.ID)
-      return item.ID == value;
-    });
-    // console.log(indName)
-    industryFilter(indName);
-   }
 
+    if (value != 0) {
+      let indName = IndustryListData.filter((item) => {
+        //  console.log( typeof item.ID)
+        return item.ID == value;
+      });
+      // console.log(indName)
+      industryFilter(indName);
+    }
 
     setCustData((prev) => ({
       ...prev,
@@ -96,8 +95,8 @@ function AdminPanel() {
     e.preventDefault();
     var key = e.target.name;
     var value = e.target.value;
-    if(value != 0){
-    salesManFilter(value);
+    if (value != 0) {
+      salesManFilter(value);
     }
     setCustData((prev) => ({
       ...prev,
@@ -109,20 +108,19 @@ function AdminPanel() {
     var key = e.target.name;
     var value = e.target.value;
     // console.log(value);
-    if(value != 0){
-    let businessName = BusinessListData.filter((item) => {
-      //  console.log( typeof item.ID)
-      return item.ID == value;
-    });
-  
-    businessSizeFilter(businessName);
-  }
+    if (value != 0) {
+      let businessName = BusinessListData.filter((item) => {
+        //  console.log( typeof item.ID)
+        return item.ID == value;
+      });
+
+      businessSizeFilter(businessName);
+    }
     setCustData((prev) => ({
       ...prev,
       [key]: value,
     }));
   };
-
 
   const businessSizeFilter = (val) => {
     console.log(val);
@@ -168,7 +166,7 @@ function AdminPanel() {
     return [...arr, ...arr1];
   }, [IndustryListData]);
 
-  const [id, setID] = useState([]);
+  // const [id, setID] = useState([]);
   const [filteredData, setFilteredData] = useState({
     StartDate: null,
     EndDate: null,
@@ -267,14 +265,14 @@ function AdminPanel() {
     }
   }, [isErrorAdmin, isAdminSuccess]);
 
-  const onChangeHandler = (pid) => {
-    let iniarr = [...id, ...pid];
-    const myset = new Set([...iniarr]);
-    let arr = Array.from(myset);
-    setID(arr);
-  };
+  // const onChangeHandler = (pid) => {
+  //   let iniarr = [...id, ...pid];
+  //   const myset = new Set([...iniarr]);
+  //   let arr = Array.from(myset);
+  //   setID(arr);
+  // };
 
-  const Col = [
+  const Column = [
     {
       ...GRID_CHECKBOX_SELECTION_COL_DEF,
       hideable: false,
@@ -425,70 +423,81 @@ function AdminPanel() {
         </div>
       </div>
       <hr className="m-0 p-0" />
-      <div className="d-flex justift-content-center align-items-center mx-5">
-        <DateRangeInput
-          InputHandler={filterHandler}
-          StartDate={"StartDate"}
-          EndDate={"EndDate"}
-          StartDateValue={filteredData?.StartDate}
-          EndDateValue={filteredData?.EndDate}
-          maxdate1={cdate}
-          maxdate2={cdate}
-          mindate2={filteredData?.StartDate}
-        />
-        {/* <div className="mt-2">
-          <SelectOption
-            Soptions={[
-              { Name: "--Select Status--", Value: -1 },
-              { Name: "InActive", Value: 1 },
-              { Name: "Active", Value: 2 },
-            ]}
-            OnSelect={(e) => {
-              setFilteredData({ ...filteredData, Status: e.target.value });
-            }}
-            SName={"Name"}
-            PlaceHolder={"Status"}
-            Value={filteredData?.Status}
-            SelectStyle={{ padding: "7px 10px", width: "150px" }}
-          />
-        </div> */}
 
-        <div>
-          <CheckBox
-            Label={"Today"}
-            Name={"today"}
-            checkid={filteredData?.today}
-            Value={filteredData?.today == 0 ? 1 : 0}
-            onChange={filterHandler}
+      <Row style={{padding:"1px 30px"}}>
+        <Col xl={4 } lg={5} md={8} sm={12} xs={12} >
+          <DateRangeInput
+            InputHandler={filterHandler}
+            StartDate={"StartDate"}
+            EndDate={"EndDate"}
+            StartDateValue={filteredData?.StartDate}
+            EndDateValue={filteredData?.EndDate}
+            maxdate1={cdate}
+            maxdate2={cdate}
+            mindate2={filteredData?.StartDate}
           />
-        </div>
-        <div>
+        </Col>
+
+        <Col xl={2} lg={3} md={4} sm={12} xs={12}>
+          <div className="d-flex justify-content-start align-items-center mt-3">
+            <CheckBox
+              Label={"Today"}
+              Name={"today"}
+              checkid={filteredData?.today}
+              Value={filteredData?.today == 0 ? 1 : 0}
+              onChange={filterHandler}
+            />{" "}
+            <Button
+              variant="link"
+              name="Reset"
+              type="reset"
+              value="reset"
+              onClick={() => {
+                setFilteredData({
+                  EndDate: null,
+                  StartDate: null,
+                  Status: null,
+                  today: null,
+                });
+              }}
+            >
+              <i
+                className="bi bi-arrow-counterclockwise"
+                style={{
+                  fontSize: "25px",
+                  fontWeight: "bolder",
+                  color: "gray",
+                }}
+              ></i>
+            </Button>
+          </div>
+        </Col>
+
+        <Col xl={3} lg={4} md={5} sm={6} xs={12}>
           <MultipleSelection
-            FieldName={"Feedbackstatus"}
+            FieldName={"Feedback Status"}
             MName={"type_name"}
             State={filteredData?.Status}
             data={FBTypeListData}
             onChange={SelectHandler}
             uniqueKey={"ID"}
             dataLength={FBTypeListData?.length}
-            StyleInput={{ marginTop: "10px" }}
+            StyleInput={{ padding: "4px 10px" ,marginTop:"25px"}}
           />
-        </div>
-        <div>
+        </Col>
+
+        <Col lg={3} md={4} sm={6} xs={12} >
           <SelectOption
             OnSelect={InputHandler}
             PlaceHolder={"--Select Industry--"}
             SName={"id_industry"}
             Value={custData?.id_industry}
             Soptions={SelectIndustryList}
-            SelectStyle={{
-              padding: "4px 15px",
-              marginTop: "10px",
-              marginLeft: "8px",
-            }}
+            SelectStyle={{ padding: "4px 10px",marginBottom:"20px",marginTop:"28px" }}
           />
-        </div>
-        <div>
+        </Col>
+
+        <Col lg={3} md={4} sm={6} xs={12}>
           <SelectOption
             OnSelect={InputHandler1}
             PlaceHolder={"--Select SalesMan--"}
@@ -496,13 +505,12 @@ function AdminPanel() {
             Value={custData?.id_salesman}
             Soptions={SelectSalesManList}
             SelectStyle={{
-              padding: "4px 15px",
-              marginTop: "10px",
-              marginLeft: "12px",
+              padding: "4px 10px",
             }}
           />
-        </div>
-        <div>
+        </Col>
+
+        <Col lg={3} md={4} sm={6} xs={12}>
           <SelectOption
             Soptions={SelectBSizeList}
             SName={"BusinessSize"}
@@ -510,43 +518,22 @@ function AdminPanel() {
             Value={custData?.BusinessSize || 0}
             PlaceHolder={"--Select Business Size--"}
             SelectStyle={{
-              padding: "4px 15px",
-              marginTop: "10px",
-              marginLeft: "15px",
+              padding: "4px 10px",
             }}
           />
-        </div>
-        <Button
-          variant="link"
-          name="Reset"
-          type="reset"
-          value="reset"
-          onClick={() => {
-            setFilteredData({
-              EndDate: null,
-              StartDate: null,
-              Status: null,
-              today: null,
-            });
-          }}
-        >
-          <i
-            className="bi bi-arrow-counterclockwise"
-            style={{ fontSize: "25px", fontWeight: "bolder", color: "gray" }}
-          ></i>
-        </Button>
-      </div>
+        </Col>
+      </Row>
+
       <div className="px-md-2 px-sm-3 px-xs-1">
         <ReusableDataGrid
-          col={Col}
-          id={id}
-          onChangeRow={(id) => {
-            onChangeHandler(id);
-          }}
+          col={Column}
           row={adminData}
           uniquekey={"Vounum"}
           key={1}
-          checkSelect={true}
+          checkSelect={false}
+          onChangeRow={() => {
+            return 0;
+          }}
         />
       </div>
     </Container>

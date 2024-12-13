@@ -281,21 +281,6 @@ const SubmitHandler = (e) => {
                     }}
                   />
                 </Col>
-                {/* <Col md={6}>
-                  <label>Voucher Date :</label>
-                  <InputBox
-                    Icon={<i className="bi bi-calendar-event"></i>}
-                    // InputStyle={ }
-                    Name={"Voudate"}
-                    error={false}
-                    errorMsg={"false"}
-                    label={"Voucher Date"}
-                    onChange={InputHandler}
-                    placeholder={"Voucher Date"}
-                    type={"date"}
-                    value={moment(fbData?.Voudate).format("YYYY-MM-DD")}
-                  />
-                </Col> */}
                 <Col md={6}>
                   <label className="mb-1">Action Date :</label>
                   <InputBox

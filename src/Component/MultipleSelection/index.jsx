@@ -27,13 +27,6 @@ function MultipleSelection({
           />
         </li>
         {data?.map((item, index) => {
-          // console.log(
-          // console.log(item);
-          //   State?.includes(item[`${uniqueKey}`]),
-          //   item[`${uniqueKey}`],State
-          // );
-          console.log(State);
-
           return (
             <li key={index} className="list-box">
               <Form.Check
