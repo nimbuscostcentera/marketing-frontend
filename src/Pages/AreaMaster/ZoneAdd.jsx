@@ -19,7 +19,7 @@ import { AddZoneFunc, ClearStateAddZone } from "../../Slice/AddZoneSlice";
 
 function ZoneAdd() {
   const location = useLocation();
-  var { cityId } = location.state;
+  var { cityId } = location.state || {};
   const [data, setData] = useState({
     NAME: null,
     Parent_zone: cityId,
@@ -29,7 +29,7 @@ function ZoneAdd() {
   const [zoneId, setZoneId] = useState([]);
   const [param, setParam] = useState({ val: false, message: "" });
   //   const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const currdate = moment();
   const { userInfo } = useSelector((state) => state.auth);
   // Fetch the City Add
@@ -49,6 +49,15 @@ function ZoneAdd() {
     },
     [isAddZoneSuccess]
   );
+  
+  useEffect(() => {
+    setTimeout(() => {
+      if (!cityId) {
+        toast.error("Select a City to see Zone");
+        navigate("/auth/city");
+      }
+    }, 3000);
+  }, [cityId]);
 
   //useEffect for City add
   useEffect(() => {
@@ -130,8 +139,7 @@ function ZoneAdd() {
           lg={6}
           xl={6}
           className="text-center text-sm-end"
-        >
-        </Col>
+        ></Col>
         <Col xs={12} sm={12} md={12} lg={12} xl={12}>
           <hr style={{ marginTop: 1, marginBottom: 1 }} />
         </Col>
@@ -178,9 +186,9 @@ function ZoneAdd() {
                 row={ZoneListData}
                 col={zoneCol}
                 id={zoneId}
+                loading={cityId ? false : true}
                 onChangeRow={(id) => setZoneId(id ? [id] : [])}
                 uniquekey={"ID"}
-                loading={false}
                 DataGridHeight={360}
                 checkSelect={1}
                 key={2}
