@@ -357,7 +357,7 @@ function CompanyRegisterMaster() {
                   Name={"ContactNumber"}
                   error={false}
                   errorMsg={"Enter Correct ContactNumber"}
-                  maxlen={10}
+                  maxlen={20}
                   onChange={InputHandler}
                 />{" "}
               </Col>

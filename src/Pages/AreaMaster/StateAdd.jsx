@@ -18,7 +18,7 @@ import "react-toastify/dist/ReactToastify.css";
 function StateAdd() {
   const location = useLocation();
   let { countryId } = location.state || {};
-   countryId = countryId === null ? "-1" : countryId;
+  countryId = countryId === null ? "-1" : countryId;
   const [data, setData] = useState({ State_name: "", id_country: countryId });
   const dispatch = useDispatch();
   const [stateId, setStateId] = useState([]);
@@ -27,23 +27,34 @@ function StateAdd() {
   const currdate = moment();
   const { userInfo } = useSelector((state) => state.auth);
 
-    // Fetch the State Add 
-    const { isAddStateLoading,
+  // Fetch the State Add
+  const {
+    isAddStateLoading,
     AddStateSuccessMsg,
     AddStateErrorMsg,
     isAddStateError,
-    isAddStateSuccess } = useSelector(state => state.stateadd);
+    isAddStateSuccess,
+  } = useSelector((state) => state.stateadd);
 
-
-    // fetch state data list
+  // fetch state data list
   const { StateListData } = useFetchState(
     {
       CompanyCode: userInfo?.details?.CompanyCode,
-      CountryCode: countryId
-    }, [isAddStateSuccess]); 
+      CountryCode: countryId,
+    },
+    [isAddStateSuccess]
+  );
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (!countryId) {
+        toast.error("Select a Country to see State");
+        navigate("/auth/geo-loc");
+      }
+}, 3000);
+  }, [countryId]);
 
-  //useEffect for country add 
+  //useEffect for country add
   useEffect(() => {
     // setId(countryId);
     if (isAddStateSuccess && !isAddStateError & !isAddStateLoading) {
@@ -51,13 +62,11 @@ function StateAdd() {
         autoClose: 6000,
         position: "top-right",
       });
-      setData( {
+      setData({
         State_name: null, // Reset only the `State_name` field
-        id_country : countryId
+        id_country: countryId,
       });
-
     }
-
     if (isAddStateError && !isAddStateLoading) {
       toast.error(AddStateErrorMsg, { autoClose: 6000, position: "top-right" });
     }
@@ -65,8 +74,7 @@ function StateAdd() {
     // dispatch(ClearState1());
   }, [isAddStateError, isAddStateSuccess, isAddStateLoading]);
 
-
-  //Input handler 
+  //Input handler
   const InputHandler = (e) => {
     let { name, value } = e.target;
     setData((prevData) => ({
@@ -75,22 +83,23 @@ function StateAdd() {
     }));
   };
 
-
-  // Submit function 
+  // Submit function
   const SubmitHandler = (e) => {
     e.preventDefault();
-    console.log(data)
-    data.State_name = (data?.State_name)?.trim()
-    let obj = { CompanyCode: userInfo?.details?.CompanyCode, ...data }
-    if (obj.State_name === undefined || obj.State_name === null || obj.State_name === "") {
+    console.log(data);
+    data.State_name = data?.State_name?.trim();
+    let obj = { CompanyCode: userInfo?.details?.CompanyCode, ...data };
+    if (
+      obj.State_name === undefined ||
+      obj.State_name === null ||
+      obj.State_name === ""
+    ) {
       toast.warning("Please Write a State Name", {
         autoClose: 6000,
         position: "top-right",
       });
     } else {
-      dispatch(
-        AddStateFunc(obj)
-      );
+      dispatch(AddStateFunc(obj));
     }
     // Reset the specific input field
     // setData( {
@@ -108,14 +117,21 @@ function StateAdd() {
   // console.log(countryId);
   return (
     <Container fluid>
-        {/* Toaster  */}
+      {/* Toaster  */}
 
-        <ToastContainer />
-      {param.val ? <>
-        <Alert className="text-center" variant={'danger'} dismissible onClose={() => setParam({ val: false, message: "" })}>
-          {param.message}
-        </Alert>
-      </> : null}
+      <ToastContainer />
+      {param.val ? (
+        <>
+          <Alert
+            className="text-center"
+            variant={"danger"}
+            dismissible
+            onClose={() => setParam({ val: false, message: "" })}
+          >
+            {param.message}
+          </Alert>
+        </>
+      ) : null}
       <Row>
         <Col xs={12} sm={6} md={6} lg={6} xl={6}>
           <h5 className="ms-5 mt-2">State Manager</h5>
@@ -133,9 +149,9 @@ function StateAdd() {
             className="btn btn-link"
             onClick={() => {
               if (stateId.length === 0) {
-                setParam({ val: true, message: "Please select a State" })
+                setParam({ val: true, message: "Please select a State" });
               } else {
-                navigate("/auth/city", { state: {stateId: stateId[0] } });
+                navigate("/auth/city", { state: { stateId: stateId[0] } });
               }
             }}
           >
@@ -193,7 +209,7 @@ function StateAdd() {
                 id={stateId}
                 onChangeRow={(id) => setStateId(id ? [id] : [])}
                 uniquekey={"ID"}
-                loading={false}
+                loading={countryId ? false : true}
                 DataGridHeight={360}
                 checkSelect={1}
                 key={2}

@@ -20,7 +20,7 @@ import { AddCityFunc, ClearCityAddCity } from "../../Slice/AddCitySlice";
 
 function StateAdd() {
   const location = useLocation();
-  const { stateId } = location.state;
+  let { stateId } = location.state || {};
   const [data, setData] = useState({ NAME: null, id_state: stateId });
   const dispatch = useDispatch();
   const [cityId, setCityId] = useState([]);
@@ -46,6 +46,15 @@ function StateAdd() {
     },
     [isAddCitySuccess]
   );
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (!stateId) {
+        toast.error("Select a State to see City");
+        navigate("/auth/state");
+      }
+    }, 3000);
+  }, [stateId]);
 
   //useEffect for City add
   useEffect(() => {
@@ -191,7 +200,7 @@ function StateAdd() {
                 id={cityId}
                 onChangeRow={(id) => setCityId(id ? [id] : [])}
                 uniquekey={"ID"}
-                loading={false}
+                loading={stateId ? false : true}
                 DataGridHeight={360}
                 checkSelect={1}
                 key={2}

@@ -359,12 +359,12 @@ function CustomerMaster() {
   const SubmitHandler = (e) => {
     e.preventDefault();
     console.log(custData);
-    // dispatch(
-    //   CustRegFunc({
-    //     ...custData,
-    //     CompanyCode: userInfo?.details?.CompanyCode,
-    //   })
-    // );
+    dispatch(
+      CustRegFunc({
+        ...custData,
+        CompanyCode: userInfo?.details?.CompanyCode,
+      })
+    );
   };
   //modal close
   const handleClose = () => {
